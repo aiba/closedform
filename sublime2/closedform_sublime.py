@@ -41,7 +41,6 @@ def get_cursor(view):
   for region in view.sel():
     if region.empty():
       return region.begin()
-      return buf
   return None
 
 def parse_stack(view):

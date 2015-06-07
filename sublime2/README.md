@@ -1,12 +1,11 @@
 
-# Installation (Sublime 2, OSX):
+## Installation (Sublime 2, OSX):
 
 ```bash
-$ cd '~/Library/Application Support/Sublime Text 2/Packages/User'
-$ ln -s /path/to/closedform/sublime/closedform_sublime.py
+$ cp closedform_sublime.py '~/Library/Application Support/Sublime Text 2/Packages/User/'
 ```
 
-# Suggested keymap config:
+## Suggested keymap config:
 
 ```javascript
 [
