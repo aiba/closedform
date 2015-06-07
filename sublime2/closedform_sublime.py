@@ -1,4 +1,3 @@
-
 import sublime
 import sublime_plugin  
 
@@ -16,24 +15,7 @@ def is_opener(c):
 def is_closer(c):
   return (0 < len([x for x in CHARPAIRS if x[1]==c]))
 
-def cursor():
-  (r,c) = vim.current.window.cursor
-  return (r-1,c) # 0-based line
-
-def append_char(c):
-  (cline,ccol) = cursor()
-  s = vim.current.buffer[cline]
-  vim.current.buffer[cline] = s[:ccol+1] + c + s[ccol+1:]
-  vim.current.window.cursor = (cline+1,ccol+1)
-
-def buffer_until_cursor():
-  buf = vim.current.buffer
-  (cline, ccol) = vim.current.window.cursor
-  cline -= 1 # make 0-based
-  return ("\n".join(buf[0:cline]) + "\n" + buf[cline][0:ccol+1] + "\n")
-
-def form_stack():
-  s = buffer_until_cursor()
+def form_stack(s):
   i=0
   in_str=False
   stack = []
@@ -52,7 +34,37 @@ def form_stack():
     continue
   return stack
 
+# Sublime-specific stuff ------------------------------------
+
+def get_cursor(view):
+  # assume selection is just cursor, not a block of text.
+  for region in view.sel():
+    if region.empty():
+      return region.begin()
+      return buf
+  return None
+
+def parse_stack(view):
+  i = get_cursor(view)
+  if i:
+    buf = view.substr(sublime.Region(0,i))
+    if buf:
+      return form_stack(buf)      
+  return []
+
+def insert(view, edit, c):
+  i = get_cursor(view)
+  view.insert(edit, i, c)
+
 class AppendClosingFormSymbolCommand(sublime_plugin.TextCommand):  
   def run(self, edit):
-    self.view.insert(edit, 0, "Hello!")
+    stack = parse_stack(self.view)
+    if len(stack) > 0:
+      c = char_pair(stack[-1])
+      insert(self.view, edit, c)
 
+class AppendAllClosingFormSymbolsCommand(sublime_plugin.TextCommand):  
+  def run(self, edit):
+    stack = parse_stack(self.view)
+    while len(stack) > 0:
+      insert(self.view, edit, char_pair(stack.pop()))
