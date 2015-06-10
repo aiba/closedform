@@ -5,6 +5,13 @@
 $ cp closedform_sublime.py '~/Library/Application Support/Sublime Text 2/Packages/User/'
 ```
 
+## Installation (Sublime 3, OSX):
+
+```bash
+$ cp closedform_sublime.py '~/Library/Application Support/Sublime Text 3/Packages/User/'
+```
+
+
 ## Suggested keymap config:
 
 ```javascript
