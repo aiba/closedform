@@ -38,9 +38,10 @@ def form_stack(s):
 
 def get_cursor(view):
   # assume selection is just cursor, not a block of text.
+  offset = 1 if view.settings().get("command_mode", 0) else 0
   for region in view.sel():
     if region.empty():
-      return region.begin()
+      return region.begin() + offset
   return None
 
 def parse_stack(view):
